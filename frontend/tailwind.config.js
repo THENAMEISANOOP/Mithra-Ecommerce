@@ -11,7 +11,9 @@ export default {
       },
       colors: {
         primary: {
-          600: '#2563eb', // blue-600 as primary color
+           500: '#3B82F6', // blue-500 as default
+          600: '#2563EB', // primary-600 used in the component
+          700: '#1D4ED8' 
         },
       },
     },
