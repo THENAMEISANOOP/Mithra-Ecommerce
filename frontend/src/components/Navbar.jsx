@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { assets } from '../assets/assets';
 import { NavLink, Link } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [profileDropdown, setProfileDropdown] = useState(false);
+    const {setShowSearch} = useContext(ShopContext);
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -57,7 +59,7 @@ const Navbar = () => {
                 {/* Action Icons */}
                 <div className="flex items-center space-x-6">
                     <button className="text-gray-600 hover:text-primary-600 transition-colors duration-200">
-                        <img src={assets.search_icon} className="w-5 h-5" alt="Search" />
+                        <img onClick={()=>setShowSearch(true)} src={assets.search_icon} className="w-5 h-5" alt="Search" />
                     </button>
 
                     <div className="relative">

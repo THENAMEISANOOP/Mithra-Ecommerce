@@ -5,189 +5,182 @@ import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 
 const Collection = () => {
-  const { products } = useContext(ShopContext);
-
-  const [showFilter, setShowFilter] = useState(false);
+  const { products, search, showSearch } = useContext(ShopContext);
   const [filterProducts, setFilterProducts] = useState(products);
-
   const [category, setCategory] = useState([]);
   const [subcategory, setSubcategory] = useState([]);
-
   const [sortType, setSortType] = useState('relavent');
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Category filter toggle
-  const toggleCategory = (e) => {
-    const value = e.target.value;
-    if (category.includes(value)) {
-      setCategory((prev) => prev.filter((item) => item !== value));
-    } else {
-      setCategory((prev) => [...prev, value]);
-    }
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Filter toggle functions
+  const toggleCategory = (value) => {
+    setCategory(prev => 
+      prev.includes(value) 
+        ? prev.filter(item => item !== value) 
+        : [...prev, value]
+    );
   };
 
-  // Subcategory filter toggle
-  const toggleSubcategory = (e) => {
-    const value = e.target.value;
-    if (subcategory.includes(value)) {
-      setSubcategory((prev) => prev.filter((item) => item !== value));
-    } else {
-      setSubcategory((prev) => [...prev, value]);
-    }
+  const toggleSubcategory = (value) => {
+    setSubcategory(prev => 
+      prev.includes(value) 
+        ? prev.filter(item => item !== value) 
+        : [...prev, value]
+    );
   };
 
-  // Apply category & subcategory filters
-  const applyFilters = () => {
-    let productsCopy = [...products];
+  // Apply filters
+  useEffect(() => {
+    let results = [...products];
 
+    // Search filter
+    if (showSearch && search) {
+      results = results.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Category filter
     if (category.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        category.includes(item.category)
-      );
+      results = results.filter(item => category.includes(item.category));
     }
 
+    // Subcategory filter
     if (subcategory.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        subcategory.includes(item.subCategory)
-      );
+      results = results.filter(item => subcategory.includes(item.subCategory));
     }
 
-    setFilterProducts(productsCopy);
-  };
-
-  // Handle sorting
-  const sortProducts = () => {
-    let fpCopy = [...products];
-
-    if (category.length > 0 || subcategory.length > 0) {
-      fpCopy = [...filterProducts];
+    // Sorting
+    if (sortType === 'low-high') {
+      results.sort((a, b) => a.price - b.price);
+    } else if (sortType === 'high-low') {
+      results.sort((a, b) => b.price - a.price);
     }
 
-    switch (sortType) {
-      case 'low-high':
-        setFilterProducts(fpCopy.sort((a, b) => a.price - b.price));
-        break;
-      case 'high-low':
-        setFilterProducts(fpCopy.sort((a, b) => b.price - a.price));
-        break;
-      default:
-        applyFilters();
-        break;
-    }
-  };
+    setFilterProducts(results);
+  }, [products, search, showSearch, category, subcategory, sortType]);
 
-  // Reset all filters
   const resetFilters = () => {
     setCategory([]);
     setSubcategory([]);
     setSortType('relavent');
-    setFilterProducts(products);
   };
 
-  useEffect(() => {
-    if (category.length > 0 || subcategory.length > 0) {
-      applyFilters();
-    } else {
-      setFilterProducts(products);
-    }
-  }, [category, subcategory, products]);
-
-  useEffect(() => {
-    sortProducts();
-  }, [sortType]);
-
   return (
-    <div className='flex flex-col md:flex-row p-4 gap-4'>
-      
-      <button
-        onClick={() => setShowFilter(!showFilter)}
-        className='flex md:hidden justify-between items-center cursor-pointer font-semibold text-lg p-3 bg-white border rounded'
-      >
-        {showFilter ? 'block' : 'hidden'}
-        <img
-          className={`transition-transform ${showFilter ? 'rotate-180' : ''}`}
-          src={assets.dropdown_icon}
-          alt='toggle'
-        />
-      </button>
-
-      {/* Filter Panel */}
-      <div
-        className={`w-full md:w-1/4 ${
-          showFilter ? 'block' : 'hidden'
-        } md:block sticky top-4 h-fit bg-white z-10 border rounded p-4`}
-      >
-        {/* Category */}
-        <div className='border-b pb-3 mb-4'>
-          <p className='font-semibold mb-2'>Categories</p>
-          <div className='flex flex-col gap-2'>
-            {['Men', 'Women', 'Kids'].map((item) => (
-              <label key={item} className='cursor-pointer flex items-center'>
-                <input
-                  type='checkbox'
-                  value={item}
-                  checked={category.includes(item)}
-                  onChange={toggleCategory}
-                  className='mr-2'
-                />
-                {item}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Subcategory */}
-        <div className='border-b pb-3 mb-4'>
-          <p className='font-semibold mb-2'>Type</p>
-          <div className='flex flex-col gap-2'>
-            {['Topwear', 'Bottomwear', 'Winterwear'].map((item) => (
-              <label key={item} className='cursor-pointer flex items-center'>
-                <input
-                  type='checkbox'
-                  value={item}
-                  checked={subcategory.includes(item)}
-                  onChange={toggleSubcategory}
-                  className='mr-2'
-                />
-                {item}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Reset Button */}
-        <button
-          onClick={resetFilters}
-          className='bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded w-full'
-        >
-          Reset Filters
-        </button>
-      </div>
-
-      {/* Right Side: Products */}
-      <div className='flex-1'>
-        <div className='flex justify-between items-center mb-4'>
-          <Title text1={'ALL'} text2={'COLLECTIONS'} />
+    <div className="container mx-auto px-4 py-6">
+      {/* Header with title and sort */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <Title text1={'ALL'} text2={'COLLECTIONS'} />
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          {/* Mobile filter button */}
+          {isMobile && (
+            <button
+              onClick={() => document.getElementById('filters').classList.toggle('hidden')}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg"
+            >
+              <img src={assets.filter_icon} alt="Filters" className="w-5 h-5" />
+              <span>Filters</span>
+            </button>
+          )}
+          
           <select
             onChange={(e) => setSortType(e.target.value)}
-            className='border px-3 py-1 rounded'
+            className="border px-4 py-2 rounded-lg w-full md:w-auto"
             value={sortType}
           >
-            <option value='relavent'>Sort by: Relevant</option>
-            <option value='low-high'>Sort by: Low to High</option>
-            <option value='high-low'>Sort by: High to Low</option>
+            <option value="relavent">Sort by: Relevant</option>
+            <option value="low-high">Sort by: Low to High</option>
+            <option value="high-low">Sort by: High to Low</option>
           </select>
         </div>
+      </div>
 
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {filterProducts.map((item, index) => (
-            <ProductItem
-              key={index}
-              name={item.name}
-              id={item._id}
-              price={item.price}
-              image={item.image}
-            />
-          ))}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Filter sidebar - always visible on desktop, toggleable on mobile */}
+        <div 
+          id="filters"
+          className={`w-full md:w-72 bg-white p-5 rounded-lg shadow-sm ${isMobile ? 'hidden' : 'block'}`}
+        >
+          <div className="mb-6">
+            <h3 className="font-bold text-lg mb-4">Categories</h3>
+            <div className="space-y-2">
+              {['Men', 'Women', 'Kids'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => toggleCategory(item)}
+                  className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                    category.includes(item)
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="font-bold text-lg mb-4">Product Type</h3>
+            <div className="space-y-2">
+              {['Topwear', 'Bottomwear', 'Winterwear'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => toggleSubcategory(item)}
+                  className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                    subcategory.includes(item)
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={resetFilters}
+            className="w-full py-2 px-4 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+          >
+            Reset All Filters
+          </button>
+        </div>
+
+        {/* Product grid */}
+        <div className="flex-1">
+          {filterProducts.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filterProducts.map((item) => (
+                <ProductItem
+                  key={item._id}
+                  name={item.name}
+                  id={item._id}
+                  price={item.price}
+                  image={item.image}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">No products match your filters</p>
+              <button
+                onClick={resetFilters}
+                className="text-blue-600 hover:underline"
+              >
+                Reset filters
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
