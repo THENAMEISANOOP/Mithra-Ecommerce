@@ -11,7 +11,7 @@ export default {
       },
       colors: {
         primary: {
-           500: '#3B82F6', // blue-500 as default
+           500: 'red', // blue-500 as default
           600: '#2563EB', // primary-600 used in the component
           700: '#1D4ED8' 
         },
