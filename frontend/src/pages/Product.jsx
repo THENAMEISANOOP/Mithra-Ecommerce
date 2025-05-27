@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency ,addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(null);
   const [mainImage, setMainImage] = useState('');
   const [size, setSize] = useState('');
@@ -199,6 +199,7 @@ const Product = () => {
           </motion.div>
 
           <motion.button 
+            onClick={() => addToCart(productData._id, size)}
             whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(59, 130, 246, 0.5)" }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out"

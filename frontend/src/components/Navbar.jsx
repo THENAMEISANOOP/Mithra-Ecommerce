@@ -6,7 +6,7 @@ import { ShopContext } from '../context/ShopContext';
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [profileDropdown, setProfileDropdown] = useState(false);
-    const {setShowSearch} = useContext(ShopContext);
+    const {setShowSearch,getCartCount} = useContext(ShopContext);
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -104,7 +104,7 @@ const Navbar = () => {
                     >
                         <img src={assets.cart_icon} className="w-5 h-5" alt="Cart" />
                         <span className="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            10
+                            {getCartCount() || 0}
                         </span>
                     </Link>
 
