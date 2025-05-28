@@ -67,7 +67,7 @@ const Navbar = () => {
                             onClick={() => setProfileDropdown(!profileDropdown)}
                             className="text-gray-600 hover:text-primary-600 transition-colors duration-200"
                         >
-                            <img src={assets.profile_icon} className="w-5 h-5" alt="Profile" />
+                            <Link to="/login"><img src={assets.profile_icon} className="w-5 h-5" alt="Profile" /></Link>
                         </button>
                         {profileDropdown && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
@@ -190,7 +190,7 @@ const Navbar = () => {
                                             className="text-gray-600 hover:text-primary-600"
                                             onClick={() => setVisible(false)}
                                         >
-                                            <img src={assets.profile_icon} className="w-5 h-5" alt="Profile" />
+                                            <Link to="/login"><img src={assets.profile_icon} className="w-5 h-5" alt="Profile" /></Link>
                                         </Link>
                                         <Link 
                                             to="/cart" 
