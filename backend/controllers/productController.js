@@ -73,7 +73,20 @@ export const addProduct = async (req, res) => {
 
 
 // list products controller
-export const listProducts = async (req, res) =>{}
+export const listProducts = async (req, res) =>{
+    try {
+        const products = await ProductModel.find({})
+        res.json({
+            message: "Products listed successfully.",
+            products
+        }); 
+        
+    } catch (error) {
+        console.error("Error listing products:", error);
+        res.status(500).json({ message: "Error listing products." });
+        
+    }
+}
 
 // removing product controller
 export const removeProduct = async (req, res) => {}
