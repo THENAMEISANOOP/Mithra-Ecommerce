@@ -73,24 +73,13 @@ export const registerUser = async (req, res) => {
         // creating token
         const token = createToken(user._id);
 
-        res.json ({ message: "User created successfully.", token });
-
-
-        
-
-
-
-        
+        res.json ({ message: "User created successfully.", token });  
     } 
         catch (error) {
   console.error("Registration Error:", error);
   res.status(500).json({ message: "Error registering user." });
-}
-
-
-        
+}    
     }
-
 
 // route for adminLogin
 export const loginAdmin = async (req, res) => {

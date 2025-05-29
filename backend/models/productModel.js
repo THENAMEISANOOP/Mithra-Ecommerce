@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
         trim: true
     },
     image: {
-        type: String,
+        type: [String],
         required: true,
         trim: true
     },
@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    subCateogory: {
+    subCategory: {
         type: String,
         required: true,
         trim: true
