@@ -89,7 +89,35 @@ export const listProducts = async (req, res) =>{
 }
 
 // removing product controller
-export const removeProduct = async (req, res) => {}
+export const removeProduct = async (req, res) => {
+    try {
+        await ProductModel.findByIdAndDelete(req.params.id);
+        res.json({
+            message: "Product removed successfully."
+        });
+        
+    } catch (error) {
+        console.error("Error removing product:", error);
+        res.status(500).json({ message: "Error removing product." });
+        
+    }
+}
 
 // single product info controller
- export const singleProduct = async (req, res) => {}
+ export const singleProduct = async (req, res) => {
+    try {
+        const product = await ProductModel.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+        res.json({
+            message: "Single product fetched successfully.",
+            product
+        });
+        
+    } catch (error) {
+        console.error("Error fetching single product:", error);
+        res.status(500).json({ message: "Error fetching single product." });
+        
+    }
+ }
