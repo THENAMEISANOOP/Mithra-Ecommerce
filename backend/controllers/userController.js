@@ -4,6 +4,8 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '3d' });
 }
@@ -83,5 +85,21 @@ export const registerUser = async (req, res) => {
 
 // route for adminLogin
 export const loginAdmin = async (req, res) => {
-    res.json({ message: "Admin login working." });
+    try {
+        const { email, password } = req.body;
+
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+            const payload = { email, role: "admin" };
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '3d' });
+
+            res.json({ message: "Admin logged in successfully.", token });
+        } else {
+            return res.status(400).json({ message: "Invalid admin credentials." });
+        }
+
+    } catch (error) {
+        console.error("Admin Login Error:", error);
+        res.status(500).json({ message: "Error logging in admin." });
+    }
 };
+
