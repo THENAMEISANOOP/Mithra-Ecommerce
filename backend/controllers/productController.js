@@ -61,6 +61,7 @@ export const addProduct = async (req, res) => {
         await product.save();
 
         res.json({
+            success: true,
             message: "Product added successfully.",
             product
         });
