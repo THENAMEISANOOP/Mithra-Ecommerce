@@ -14,7 +14,7 @@ const ListProduct = ({ token }) => {
         },
       });
 
-      // No `success` field in your backend for listProducts
+      
       if (response.data.products) {
         setList(response.data.products);
       } else {
