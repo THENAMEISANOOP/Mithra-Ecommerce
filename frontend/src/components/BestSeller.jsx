@@ -12,7 +12,7 @@ const BestSeller = () => {
         if (products && products.length > 0) {
             // Changed from bestSeller to bestseller (lowercase s)
             const bestProduct = products.filter(item => item.bestseller);
-            console.log('Best products found:', bestProduct); // Debug log
+            // console.log('Best products found:', bestProduct); // Debug log
             setBestSeller(bestProduct.slice(0, 5));
             setLoading(false);
         }

@@ -15,6 +15,7 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]);
+  const [token , setToken] = useState('');
   const navigate= useNavigate();
 
   const addToCart = async (itemId, size) => {
@@ -82,7 +83,7 @@ const updateQuantity = async (itemId,size,quantity)=>{
  const getProductsData = async () => {
   try {
     const response = await axios.get(`${backendUrl}/api/product/list`);
-    console.log("Fetched Products:", response.data.products);
+    // console.log("Fetched Products:", response.data.products);
     if (response.data.products) {
       setProducts(response.data.products);
     } else {
@@ -93,12 +94,22 @@ const updateQuantity = async (itemId,size,quantity)=>{
     toast.error("Failed to fetch products");
   }
 };
-console.log("Backend URL is:", backendUrl);
+// console.log("Backend URL is:", backendUrl);
 
 
   useEffect(()=>{
     getProductsData();
-  },[ ])
+  },[])
+
+useEffect(() => {
+  const localToken = localStorage.getItem("token");
+  if (!token && localToken) {
+    setToken(localToken);
+  }
+}, [token]);
+
+
+
 
   const value = {
     products,
@@ -115,6 +126,8 @@ console.log("Backend URL is:", backendUrl);
     getCartAmount,
     navigate,
     backendUrl,
+    setToken,
+    token
     
   };
 
