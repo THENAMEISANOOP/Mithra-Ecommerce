@@ -13,6 +13,8 @@ import "react-toastify/dist/ReactToastify.css";
 // 🔗 Set your backend URL here
 export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
 
+ export const currency='$';
+
 const AddProduct = addProduct;
 const Orders = orders;
 const ListProduct = listProduct;
