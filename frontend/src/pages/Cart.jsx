@@ -57,8 +57,11 @@ const Cart = () => {
           <div className="md:col-span-2 space-y-5">
             {cartData.map((item, index) => {
               const productData = products.find(
-                (product) => product._id === item._id
+                (product) => product?._id === item._id
               );
+
+              if (!productData) return null;
+
               return (
                 <div
                   key={index}
@@ -70,7 +73,7 @@ const Cart = () => {
                 >
                   {/* Product Image */}
                   <img
-                    src={productData.image[0]}
+                    src={productData.image?.[0] || assets.upload_area}
                     alt={productData.name}
                     className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md border"
                   />

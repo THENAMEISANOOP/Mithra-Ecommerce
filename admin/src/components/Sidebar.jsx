@@ -3,27 +3,30 @@ import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
 
 const Sidebar = () => {
+  const navItems = [
+    { label: "Add Items", to: "/add", icon: assets.add_icon },
+    { label: "List Items", to: "/list", icon: assets.order_icon },
+    { label: "Orders", to: "/orders", icon: assets.order_icon }
+  ]
+
   return (
-    <div className='w-[18%] min-h-screen border-r-2'>
-        <div className='flex flex-col gap-4 pt-6 pl-[20%] text-[15px]'>
-
-            <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to="/add">
-                <img className='w-5 h-5' src={assets.add_icon} alt="" />
-                <p className='hidden md:block'>Add Items</p>
-            </NavLink>
-
-            <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to="/list">
-                <img className='w-5 h-5' src={assets.order_icon} alt="" />
-                <p className='hidden md:block'>List Items</p>
-            </NavLink>
-
-            <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to="/orders">
-                <img className='w-5 h-5' src={assets.order_icon} alt="" />
-                <p className='hidden md:block'>Orders</p>
-            </NavLink>
-
-        </div>
-
+    <div className='w-[18%] min-h-screen bg-white border-r border-gray-200'>
+      <div className='flex flex-col gap-3 pt-8 px-4 text-sm'>
+        {navItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.to}
+            className={({ isActive }) =>
+              `flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
+                isActive ? "bg-black text-white" : "hover:bg-gray-100 text-gray-800"
+              }`
+            }
+          >
+            <img src={item.icon} alt={item.label} className='w-5 h-5' />
+            <span className='hidden md:inline'>{item.label}</span>
+          </NavLink>
+        ))}
+      </div>
     </div>
   )
 }
