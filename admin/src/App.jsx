@@ -1,53 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import addProduct from "./pages/AddProduct.jsx";
-import orders from "./pages/Orders";
-import listProduct from "./pages/ListProduct.jsx";
+import React, { useEffect, useState } from 'react'
+import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
+import { Routes, Route } from 'react-router-dom'
+import Add from './pages/Add'
+import List from './pages/List'
+import Orders from './pages/Orders'
+import Login from './components/Login'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import Login from "./components/Login.jsx";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-// 🔗 Set your backend URL here
-export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5001";
-
- export const currency='$';
-
-const AddProduct = addProduct;
-const Orders = orders;
-const ListProduct = listProduct;
+export const backendUrl = import.meta.env.VITE_BACKEND_URL
+export const currency = '$'
 
 const App = () => {
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-  
 
-  
+  const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):'');
+
+  useEffect(()=>{
+    localStorage.setItem('token',token)
+  },[token])
 
   return (
-    <div className="bg-gray-100 min-h-screen font-outfit">
+    <div className='bg-gray-50 min-h-screen'>
       <ToastContainer />
-      {token === "" ? (
-        <Login setToken={setToken} />
-      ) : (
-        <>
+      {token === ""
+        ? <Login setToken={setToken} />
+        : <>
           <Navbar setToken={setToken} />
-          <hr className="border-gray-300" />
-          <div className="flex">
+          <hr />
+          <div className='flex w-full'>
             <Sidebar />
-            <div className="flex-1 p-6">
+            <div className='w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base'>
               <Routes>
-                <Route path="/add" element={<AddProduct token={token} />} />
-                <Route path="/orders" element={<Orders token={token} />} />
-                <Route path="/lists" element={<ListProduct token={token} />} />
+                <Route path='/add' element={<Add token={token} />} />
+                <Route path='/list' element={<List token={token} />} />
+                <Route path='/orders' element={<Orders token={token} />} />
               </Routes>
             </div>
           </div>
         </>
-      )}
+      }
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

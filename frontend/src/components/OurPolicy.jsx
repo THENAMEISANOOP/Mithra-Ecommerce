@@ -1,56 +1,54 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { motion } from 'framer-motion'
+
+const policyItems = [
+  {
+    icon: assets.exchange_icon,
+    title: "Easy Exchange Policy",
+    description: "Hassle-free exchanges within 14 days"
+  },
+  {
+    icon: assets.quality_icon,
+    title: "7 Days Returns",
+    description: "Free returns within 7 days of purchase"
+  },
+  {
+    icon: assets.support_img,
+    title: "24/7 Support",
+    description: "Dedicated customer care always available"
+  }
+]
 
 const OurPolicy = () => {
   return (
-    <div className='container mx-auto px-4 py-12'>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-        {/* Exchange Policy */}
-        <div className='bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 text-center'>
-          <div className='flex justify-center mb-4'>
-            <img 
-              src={assets.exchange_icon} 
-              className='w-12 h-12 object-contain' 
-              alt="Easy Exchange" 
-            />
-          </div>
-          <h3 className='text-lg font-semibold text-gray-800 mb-2'>Easy Exchange</h3>
-          <p className='text-gray-600 text-sm md:text-base'>
-            We offer hassle-free exchange policy
-          </p>
-        </div>
-
-        {/* Quality Policy */}
-        <div className='bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 text-center'>
-          <div className='flex justify-center mb-4'>
-            <img 
-              src={assets.quality_icon} 
-              className='w-12 h-12 object-contain' 
-              alt="Premium Quality" 
-            />
-          </div>
-          <h3 className='text-lg font-semibold text-gray-800 mb-2'>Premium Quality</h3>
-          <p className='text-gray-600 text-sm md:text-base'>
-            We guarantee top-notch product quality
-          </p>
-        </div>
-
-        {/* Support Policy */}
-        <div className='bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 text-center'>
-          <div className='flex justify-center mb-4'>
-            <img 
-              src={assets.support_img} 
-              className='w-12 h-12 object-contain' 
-              alt="24/7 Support" 
-            />
-          </div>
-          <h3 className='text-lg font-semibold text-gray-800 mb-2'>24/7 Support</h3>
-          <p className='text-gray-600 text-sm md:text-base'>
-            Our customer service is always available
-          </p>
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          {policyItems.map((item, index) => (
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="text-center p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-shadow duration-300"
+            >
+              <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center bg-rose-100 rounded-full">
+                <img 
+                  src={item.icon} 
+                  className="w-10 h-10 object-contain"
+                  alt={item.title}
+                  loading="lazy"
+                />
+              </div>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-gray-600 text-sm md:text-base">{item.description}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

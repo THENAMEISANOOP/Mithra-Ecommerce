@@ -1,130 +1,140 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import axios from 'axios'
+import React, { useContext, useEffect, useState } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState('Login')
-  const { token, setToken, navigate, backendUrl } = useContext(ShopContext)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [currentState, setCurrentState] = useState('Login');
+  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
 
-useEffect(() => {
-  if (token || localStorage.getItem("token")) {
-    navigate('/');
-  }
-}, [token, navigate]);
+  const [name, setName] = useState('');
+  const [password, setPasword] = useState('');
+  const [email, setEmail] = useState('');
 
-const onSubmitHandler = async (e) => {
-  e.preventDefault();
-  try {
-    if (currentState === 'Sign Up') {
-      const response = await axios.post(`${backendUrl}/api/user/register`, {
-        name,
-        email,
-        password,
-      });
-      console.log('Sign Up response:', response.data);
-      // Optionally navigate after signup or ask user to login
-    } else {
-      const response = await axios.post(`${backendUrl}/api/user/login`, {
-        email,
-        password,
-      });
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Save token persistently
-        setToken(response.data.token);
-        navigate('/');
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    try {
+      if (currentState === 'Sign Up') {
+        const response = await axios.post(backendUrl + '/api/user/register', {
+          name,
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem('token', response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
       } else {
-        toast.error('Login failed: No token received');
+        const response = await axios.post(backendUrl + '/api/user/login', {
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem('token', response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
       }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
-  } catch (error) {
-    console.error('Error submitting form:', error);
-    // toast.error('Error submitting form');
-  }
-};
+  };
 
-
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, [token]);
 
   return (
     <form
       onSubmit={onSubmitHandler}
-      className="max-w-md mx-auto mt-12 p-6 bg-white rounded-lg shadow-md
-                 sm:p-8 sm:mt-20"
+      className="animate-fade-in transition-all duration-500 flex flex-col items-center w-[90%] sm:max-w-md m-auto mt-20 gap-4 bg-white p-6 rounded-md shadow-lg text-gray-800"
     >
-      <div className="mb-6 text-center">
-        <p className="text-2xl font-semibold text-gray-800">{currentState}</p>
-        <hr className="mt-2 border-primary-600 w-16 mx-auto" />
+      <div className="flex items-center gap-2 mb-2 mt-4">
+        <p className="text-3xl font-semibold transition-all duration-300">{currentState}</p>
+        <hr className="border-none h-[2px] w-8 bg-gray-800" />
       </div>
 
+      {/* Name Input with smooth show/hide */}
       {currentState === 'Sign Up' && (
         <input
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           type="text"
+          className="w-full px-4 py-2 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-black transition-all duration-300"
           placeholder="Name"
           required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-md 
-                     focus:outline-none focus:ring-2 focus:ring-primary-600
-                     focus:border-primary-600 transition"
         />
       )}
 
       <input
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
         type="email"
+        className="w-full px-4 py-2 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-black transition-all duration-300"
         placeholder="Email"
         required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-md 
-                   focus:outline-none focus:ring-2 focus:ring-primary-600
-                   focus:border-primary-600 transition"
       />
-
       <input
+        onChange={(e) => setPasword(e.target.value)}
+        value={password}
         type="password"
+        className="w-full px-4 py-2 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-black transition-all duration-300"
         placeholder="Password"
         required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full mb-6 px-4 py-3 border border-gray-300 rounded-md 
-                   focus:outline-none focus:ring-2 focus:ring-primary-600
-                   focus:border-primary-600 transition"
       />
 
-      <div className="flex items-center justify-between mb-6 text-sm text-gray-600">
-        <p className="cursor-pointer hover:text-primary-600 transition">
-          Forgot Your Password?
-        </p>
-        {currentState === 'Sign Up' ? (
-          <button
-            type="button"
-            onClick={() => setCurrentState('Login')}
-            className="text-primary-600 font-semibold hover:underline"
-          >
-            Login
-          </button>
-        ) : (
-          <button
-            type="button"
+      <div className="w-full flex justify-between text-sm text-gray-600">
+        {/* <p className="cursor-pointer hover:underline">Forgot your password?</p> */}
+        {currentState === 'Login' ? (
+          <p
             onClick={() => setCurrentState('Sign Up')}
-            className="text-primary-600 font-semibold hover:underline"
+            className="cursor-pointer hover:underline transition-all"
           >
-            Sign Up
-          </button>
+            Create account
+          </p>
+        ) : (
+          <p
+            onClick={() => setCurrentState('Login')}
+            className="cursor-pointer hover:underline transition-all"
+          >
+            Login Here
+          </p>
         )}
       </div>
 
       <button
+        className="bg-black text-white w-full py-2 mt-2 rounded hover:bg-gray-900 transition-all duration-300"
         type="submit"
-        className="w-full py-3 bg-primary-600 text-white font-semibold rounded-md
-                   hover:bg-primary-700 transition"
       >
-        {currentState === 'Sign Up' ? 'Sign Up' : 'Login'}
+        {currentState === 'Login' ? 'Sign In' : 'Sign Up'}
       </button>
-    </form>
-  )
-}
 
-export default Login
+      {/* Custom fade-in animation using Tailwind */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+          }
+        `}
+      </style>
+    </form>
+  );
+};
+
+export default Login;

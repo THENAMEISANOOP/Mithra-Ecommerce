@@ -2,28 +2,33 @@ import React, { useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { Link } from 'react-router-dom'
 
-const ProductItem = ({id,image,name,price}) => {
-    const {currency}=useContext(ShopContext)
+const ProductItem = ({ id, image, name, price }) => {
+  const { currency } = useContext(ShopContext)
 
   return (
-    <Link 
-      className='group block text-gray-800 hover:text-primary-600 transition-colors' 
+    <Link
+      onClick={() => window.scrollTo(0, 0)}
+      className="text-gray-700 cursor-pointer group block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
       to={`/product/${id}`}
+      aria-label={`View details of ${name}`}
     >
-        <div className='mb-4 overflow-hidden rounded-lg aspect-square bg-gray-50'>
-            <img 
-              src={image[0]}
-              className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
-              alt={name}
-            />
-        </div>
-        <h3 className='font-medium text-sm md:text-base mb-1 group-hover:text-primary-600 line-clamp-2'>
+      <div className="overflow-hidden aspect-w-1 aspect-h-1">
+        <img
+          className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+          src={image[0]}
+          alt={name}
+          loading="lazy"
+        />
+      </div>
+      <div className="pt-3 pb-1 px-2">
+        <p className="text-sm font-semibold truncate" title={name}>
           {name}
-        </h3>
-        <p className='text-gray-600 font-semibold'>
-          {currency}{price}
         </p>
-     </Link>
+        <p className="text-sm font-medium text-rose-600">
+          {currency}{price.toFixed(2)}
+        </p>
+      </div>
+    </Link>
   )
 }
 

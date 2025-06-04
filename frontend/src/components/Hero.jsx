@@ -1,51 +1,62 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+import React from 'react';
+import { assets } from '../assets/assets';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="relative bg-gray-50 overflow-hidden">
-      <div className="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
-        {/* Hero Content (Left Side) */}
-        <div className="w-full md:w-1/2 flex flex-col items-start space-y-6 md:space-y-8 lg:space-y-10 order-2 md:order-1 pt-10 md:pt-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-px bg-primary-600"></div>
-            <p className="text-sm font-medium tracking-wider text-primary-600 uppercase">
-              Our Best Seller
-            </p>
+    <section className="relative h-[100vh] flex items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center bg-gradient-to-r from-rose-50 to-amber-50 rounded-3xl overflow-hidden shadow-xl h-[90vh] md:h-[80vh]">
+          
+          {/* Text Content */}
+          <div className="w-full md:w-1/2 p-6 md:p-10 order-2 md:order-1 h-full flex items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-md mx-auto md:mx-0"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-0.5 bg-rose-600"></div>
+                <span className="text-sm tracking-wider text-rose-600 font-semibold">
+                  NEW COLLECTION
+                </span>
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-serif font-bold text-gray-900 leading-tight mb-6 playfair-display">
+                Elegant Styles <span className="text-rose-600">For Every</span> Occasion
+              </h1>
+
+              <Link
+                to="/collection"
+                className="inline-block btn-primary transition-all duration-300 hover:scale-105"
+              >
+                Discover Now
+              </Link>
+            </motion.div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-            Latest Arrivals
-          </h1>
-
-          <p className="text-lg md:text-xl text-gray-600 max-w-md">
-            Discover our newest collection of premium products designed for modern living.
-          </p>
-
-          <button className="group flex items-center space-x-2 text-primary-600 hover:text-primary-700 transition-colors duration-300">
-            <span className="font-semibold text-lg">Shop Now</span>
-            <svg 
-              className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
+          {/* Image Content */}
+          <div className="w-full md:w-1/2 order-1 md:order-2 h-full">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative h-full"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Hero Image (Right Side) */}
-        <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end">
-          <img 
-            src={assets.hero_img} 
-            alt="Latest Arrivals" 
-            className="w-full max-w-lg object-cover rounded-lg shadow-xl transition-all duration-500 hover:scale-105"
-          />
+              <img
+                src={assets.heroright}
+                alt="Fashion Model"
+                className="absolute inset-0 w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent md:hidden"></div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

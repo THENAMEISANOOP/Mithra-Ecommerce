@@ -1,27 +1,13 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
-import { assets } from "../assets/assets.js";
+import React from 'react'
+import {assets} from '../assets/assets'
 
-const Navbar = ({ setToken }) => {
-  const navigate = useNavigate(); // ✅ create navigate function
-
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // remove token
-    setToken(""); // reset token in state
-    navigate("/"); // ✅ navigate to root (or login route)
-  };
-
+const Navbar = ({setToken}) => {
   return (
-    <div className="flex justify-between items-center px-6 py-4 bg-green shadow-sm">
-      <img src={assets.logo} alt="Logo" className="h-10" />
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-      >
-        Logout
-      </button>
+    <div className='flex items-center py-2 px-[4%] justify-between'>
+        <img className='w-[max(10%,80px)]' src={assets.logo} alt="" />
+        <button onClick={()=>setToken('')} className='bg-gray-600 text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm'>Logout</button>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

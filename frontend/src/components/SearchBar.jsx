@@ -1,56 +1,66 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
-import { ShopContext } from '../context/ShopContext';
-import { assets } from '../assets/assets';
-import { useLocation } from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { ShopContext } from "../context/ShopContext";
+import { assets } from "../assets/assets";
+import { useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+
+const NAVBAR_HEIGHT = 56; // must match navbar height when scrolled
 
 const SearchBar = () => {
   const { search, setSearch, showSearch, setShowSearch } = useContext(ShopContext);
-  const [visible, setVisible] = useState(false);
   const location = useLocation();
-  const inputRef = useRef(null);
 
+  // Close search bar if navigated away from /collection
   useEffect(() => {
-    if (location.pathname.includes('collection')) {
-      setVisible(true);
-    } else {
-      setVisible(false);
+    if (location.pathname !== "/collection") {
+      setShowSearch(false);
     }
-  }, [location]);
+  }, [location, setShowSearch]);
 
-  // Auto focus input when shown
-  useEffect(() => {
-    if (showSearch && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [showSearch]);
-
-  return visible ? (
-    <div
-      className={`overflow-hidden transition-all duration-500 ease-in-out ${
-        showSearch ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
-      }`}
-    >
-      <div className="w-full bg-white shadow-md px-6 py-4 flex items-center justify-between rounded-b-lg">
-        <div className="flex items-center w-full md:w-3/5 border border-gray-300 rounded-full px-4 py-2 bg-gray-50 focus-within:ring-2 focus-within:ring-blue-400">
-          <img src={assets.search_icon} alt="search" className="w-5 h-5 mr-2 opacity-60" />
-          <input
-            ref={inputRef}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            type="text"
-            placeholder="Search for collections..."
-            className="w-full outline-none bg-transparent text-sm md:text-base"
-          />
-        </div>
-        <button
-          onClick={() => setShowSearch(false)}
-          className="ml-4 p-2 rounded-full hover:bg-gray-100 transition"
+  return (
+    <AnimatePresence>
+      {showSearch && location.pathname === "/collection" && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed top-[56px] left-0 right-0 z-40 bg-white shadow-sm"
+          style={{ padding: "0.5rem 0" }}
         >
-          <img src={assets.cross_icon} alt="close" className="w-5 h-5" />
-        </button>
-      </div>
-    </div>
-  ) : null;
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <div className="relative">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full py-3 pl-5 pr-12 text-gray-700 bg-gray-50 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all"
+                type="text"
+                placeholder="Search our collection..."
+                aria-label="Search collection"
+                autoFocus
+              />
+              {/* Search icon */}
+              <img
+                src={assets.search_icon}
+                className="absolute right-10 top-1/2 transform -translate-y-1/2 w-4 h-4 opacity-70"
+                alt="Search"
+              />
+              {/* Close button */}
+              <button
+                onClick={() => setShowSearch(false)}
+                aria-label="Close search"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-rose-600 focus:outline-none"
+                style={{ fontSize: '1.25rem', fontWeight: 'bold', lineHeight: 1, userSelect: 'none' }}
+                type="button"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };
 
 export default SearchBar;
