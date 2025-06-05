@@ -17,7 +17,7 @@ const Add = ({ token }) => {
 
   const categories = {
     Men: ["Topwear", "Bottomwear", "Winterwear"],
-    Women: ["Topwear", "Bottomwear", "Winterwear", "Dresses"],
+    Women: ["Topwear", "Bottomwear", "Winterwear", ],
     Kids: ["Topwear", "Bottomwear", "Winterwear"]
   };
 
