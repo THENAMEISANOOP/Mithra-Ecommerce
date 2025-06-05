@@ -15,12 +15,14 @@ const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
-// CORS Configuration
+// CORS setup
 app.use(cors({
-    origin: ['https://mithrafashions.vercel.app'], // Allow your frontend domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: ['https://mithrafashions.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
+app.options('*', cors()); // handle preflight
+
 
 // Body parser
 app.use(express.json());
