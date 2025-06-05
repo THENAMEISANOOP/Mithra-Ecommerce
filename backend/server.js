@@ -17,10 +17,14 @@ connectCloudinary();
 
 // CORS setup
 app.use(cors({
-    origin: ['https://mithrafashions.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
+  origin: [
+    'https://mithrafashions.vercel.app',
+    'https://mithra-ecommerce-admin.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
 }));
+
 app.options('*', cors()); // handle preflight
 
 
